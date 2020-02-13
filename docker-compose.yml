@@ -2,7 +2,7 @@ version: '3'
 
 services:
   consumer:
-    image: seanonet/roomtempdashboard:latest
+    image: seanonet/roomtempmqttconsumer:latest
     environment:
       DataSource: Host=dbdata;Database=MQTT;Username=postgres;Password=St0ngPassword1!;
       ClientId: metric-consumer
