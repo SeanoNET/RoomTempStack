@@ -33,7 +33,7 @@ services:
     ports:
         - 5000:5000
     environment:
-        DataSource: Server=dbdata;Database=MQTT;User Id=sa;Password=St0ngPassword1!;
+        DataSource: Host=dbdata;Database=MQTT;Username=postgres;Password=St0ngPassword1!;
         ASPNETCORE_URLS: http://0.0.0.0:5000
   grafana:
     image: grafana/grafana:6.5.0
