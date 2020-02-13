@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  consumer:
+    image: seanonet/roomtempdashboard:latest
+    environment:
+      DataSource: Host=dbdata;Database=MQTT;Username=postgres;Password=St0ngPassword1!;
+      ClientId: metric-consumer
+      MqttServerIp: mqtt
+      MqttServerPort: 1883
+      MqttSubscribeTopic: home/room/temp-mon/data
+    depends_on:
+        - mqtt
+        - dbdata
+  mqtt:
+    image: eclipse-mosquitto:1.6
+    ports:
+        - 1883:1883
+        - 9001:9001
+    volumes:
+        - mosquitto:/mosquitto/data
+        - mosquitto:/mosquitto/log eclipse-mosquitto
+  dbdata:
+    image: postgres:12
+    ports:
+    - 5432:5432
+    environment:
+        POSTGRES_PASSWORD: St0ngPassword1!
+    volumes:
+        - dbsql:/var/lib/postgresql/data
+  dashboard:
+    image: seanonet/roomtempdashboard:latest
+    ports:
+        - 5000:5000
+    environment:
+        DataSource: Server=dbdata;Database=MQTT;User Id=sa;Password=St0ngPassword1!;
+        ASPNETCORE_URLS: http://0.0.0.0:5000
+  grafana:
+    image: grafana/grafana:6.5.0
+    ports:
+        - 3000:3000     
+
+volumes:
+    mosquitto:
+    dbsql:
