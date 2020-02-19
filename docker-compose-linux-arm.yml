@@ -12,6 +12,11 @@ services:
     depends_on:
         - mqtt
         - dbdata
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure 
+
   mqtt:
     image: eclipse-mosquitto:1.6
     ports:
@@ -20,6 +25,11 @@ services:
     volumes:
         - mosquitto:/mosquitto/data
         - mosquitto:/mosquitto/log eclipse-mosquitto
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure 
+
   dbdata:
     image: postgres:12
     ports:
@@ -28,6 +38,11 @@ services:
         POSTGRES_PASSWORD: St0ngPassword1!
     volumes:
         - dbsql:/var/lib/postgresql/data
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure 
+
   dashboard:
     image: seanonet/roomtempdashboard:linux-arm-latest
     ports:
@@ -35,10 +50,19 @@ services:
     environment:
         DataSource: Host=dbdata;Database=MQTT;Username=postgres;Password=St0ngPassword1!;
         ASPNETCORE_URLS: http://0.0.0.0:5000
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure   
+
   grafana:
     image: grafana/grafana:6.5.0
     ports:
         - 3000:3000   
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure 
 
 volumes:
     mosquitto:
